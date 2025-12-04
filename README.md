@@ -259,6 +259,17 @@ flask backup
 
 # Iniciar backup automático
 flask start-auto-backup
+
+# Rodar Cliente Kiosk
+$env:SERVER_URL="http://192.168.1.30:5000"; pip install -r requirements.txt; python kiosk.py
+#ou
+$env:SERVER_URL="http://192.168.1.30:5000"; python kiosk.py
+
+# Rodar Cliente Admin
+$env:SERVER_URL="http://192.168.1.30:5000"; pip install -r requirements.txt; python admin.py
+#ou
+$env:SERVER_URL="http://192.168.1.30:5000"; python admin.py
+
 ```
 
 ## 📞 Contato
