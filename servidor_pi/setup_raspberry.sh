@@ -27,7 +27,8 @@ sudo apt update
 
 echo ""
 echo -e "${GREEN}[2/8] Instalando dependências do sistema...${NC}"
-sudo apt install -y python3-pip python3-venv libatlas-base-dev
+# libopenblas-dev substitui libatlas-base-dev em versões mais novas do Raspberry Pi OS
+sudo apt install -y python3-pip python3-venv libopenblas-dev libjpeg-dev libpng-dev libtiff-dev
 
 echo ""
 echo -e "${GREEN}[3/8] Criando ambiente virtual...${NC}"
