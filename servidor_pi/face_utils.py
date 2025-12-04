@@ -23,7 +23,31 @@ MODEL_PATH = os.path.join(MODEL_DIR, 'lbph_model.yml')
 LABELS_PATH = os.path.join(MODEL_DIR, 'labels.pkl')
 
 # Detector de faces Haar Cascade
-CASCADE_PATH = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+# Compatível com diferentes versões do OpenCV
+def _get_cascade_path():
+    """Obtém o caminho do Haar Cascade de forma compatível."""
+    # Tenta usar cv2.data (OpenCV 4.x via pip)
+    if hasattr(cv2, 'data') and hasattr(cv2.data, 'haarcascades'):
+        return cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+    
+    # Caminhos comuns no Raspberry Pi OS
+    possible_paths = [
+        '/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml',
+        '/usr/share/opencv/haarcascades/haarcascade_frontalface_default.xml',
+        '/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml',
+        '/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml',
+    ]
+    
+    for path in possible_paths:
+        if os.path.exists(path):
+            return path
+    
+    # Fallback: tenta encontrar com locate
+    raise FileNotFoundError(
+        "Haar Cascade não encontrado. Instale com: sudo apt install opencv-data"
+    )
+
+CASCADE_PATH = _get_cascade_path()
 face_cascade = cv2.CascadeClassifier(CASCADE_PATH)
 
 # Modelo LBPH global
