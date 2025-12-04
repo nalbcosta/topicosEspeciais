@@ -1,8 +1,14 @@
-Flask
-gunicorn
-Flask-JWT-Extended
-Flask-Bcrypt
-deepface
-opencv-python
-numpy
-# 'deepface' instalara automaticamente tensorflow, keras, etc. [46]
+# Servidor Flask para Raspberry Pi 3
+# Dependências otimizadas para hardware limitado
+
+Flask>=2.3.0
+gunicorn>=21.0.0
+Flask-JWT-Extended>=4.5.0
+Flask-Bcrypt>=1.0.1
+bcrypt>=4.0.0
+
+# OpenCV com contrib (inclui LBPH Face Recognizer)
+# Usar versão headless no servidor (sem GUI)
+opencv-contrib-python-headless>=4.8.0
+
+numpy>=1.24.0
