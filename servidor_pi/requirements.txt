@@ -7,10 +7,9 @@ Flask-JWT-Extended>=4.5.0
 Flask-Bcrypt>=1.0.1
 bcrypt>=4.0.0
 
-# OpenCV headless (sem GUI) - versão básica
-# O LBPH FaceRecognizer está incluído no opencv-python-headless
-# NÃO usar opencv-contrib-python-headless (muito grande para compilar no Pi)
-opencv-python-headless
+# OpenCV é instalado via apt (sudo apt install python3-opencv)
+# NÃO instalar via pip no Raspberry Pi (muito lento/falha)
+# O venv usa --system-site-packages para acessar o OpenCV do sistema
 
-# Numpy - instalado automaticamente pelo OpenCV
+# Numpy - compatível com OpenCV do sistema
 numpy

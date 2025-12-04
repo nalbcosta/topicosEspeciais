@@ -40,14 +40,16 @@ fi
 echo ""
 echo -e "${GREEN}[2/8] Instalando dependências do sistema...${NC}"
 # libopenblas-dev substitui libatlas-base-dev em versões mais novas do Raspberry Pi OS
-sudo apt install -y python3-pip python3-venv libopenblas-dev libjpeg-dev libpng-dev libtiff-dev
+# python3-opencv instala OpenCV pré-compilado (MUITO mais rápido que pip)
+sudo apt install -y python3-pip python3-venv libopenblas-dev libjpeg-dev libpng-dev libtiff-dev python3-opencv
 
 echo ""
 echo -e "${GREEN}[3/8] Criando ambiente virtual...${NC}"
 if [ -d "venv" ]; then
     echo "Ambiente virtual já existe, pulando..."
 else
-    python3 -m venv venv
+    # --system-site-packages permite usar o OpenCV instalado via apt
+    python3 -m venv --system-site-packages venv
 fi
 source venv/bin/activate
 
@@ -57,19 +59,18 @@ pip install --upgrade pip
 
 echo ""
 echo -e "${GREEN}[5/8] Instalando dependências Python...${NC}"
-echo "Isso pode demorar alguns minutos no Raspberry Pi..."
+echo "OpenCV já foi instalado via apt (muito mais rápido!)"
 
 # Limpa cache do pip para economizar espaço
 pip cache purge 2>/dev/null || true
 
-# Instala numpy primeiro (versão compatível com piwheels)
-pip install --no-cache-dir numpy
+# Verifica se OpenCV está funcionando
+python3 -c "import cv2; print(f'OpenCV versão: {cv2.__version__}')" || {
+    echo -e "${RED}Erro: OpenCV não encontrado. Tente: sudo apt install python3-opencv${NC}"
+    exit 1
+}
 
-# Instala OpenCV do piwheels (pré-compilado para ARM)
-# Usa --prefer-binary para evitar compilação
-pip install --no-cache-dir --prefer-binary opencv-python-headless
-
-# Instala o resto das dependências
+# Instala o resto das dependências (sem OpenCV, já instalado)
 pip install --no-cache-dir -r requirements.txt
 
 echo ""
