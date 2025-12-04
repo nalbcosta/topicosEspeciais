@@ -7,8 +7,10 @@ Flask-JWT-Extended>=4.5.0
 Flask-Bcrypt>=1.0.1
 bcrypt>=4.0.0
 
-# OpenCV com contrib (inclui LBPH Face Recognizer)
-# Usar versão headless no servidor (sem GUI)
-opencv-contrib-python-headless>=4.8.0
+# OpenCV headless (sem GUI) - versão básica
+# O LBPH FaceRecognizer está incluído no opencv-python-headless
+# NÃO usar opencv-contrib-python-headless (muito grande para compilar no Pi)
+opencv-python-headless
 
-numpy>=1.24.0
+# Numpy - instalado automaticamente pelo OpenCV
+numpy

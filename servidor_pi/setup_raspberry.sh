@@ -26,6 +26,18 @@ echo -e "${GREEN}[1/8] Atualizando o sistema...${NC}"
 sudo apt update
 
 echo ""
+echo -e "${GREEN}[1.5/8] Verificando espaço em disco...${NC}"
+FREE_SPACE=$(df / | tail -1 | awk '{print $4}')
+if [ "$FREE_SPACE" -lt 1000000 ]; then
+    echo -e "${RED}AVISO: Espaço em disco baixo! (< 1GB livre)${NC}"
+    echo "Limpando caches para liberar espaço..."
+    sudo apt clean
+    sudo apt autoremove -y
+    pip cache purge 2>/dev/null || true
+    rm -rf ~/.cache/pip 2>/dev/null || true
+fi
+
+echo ""
 echo -e "${GREEN}[2/8] Instalando dependências do sistema...${NC}"
 # libopenblas-dev substitui libatlas-base-dev em versões mais novas do Raspberry Pi OS
 sudo apt install -y python3-pip python3-venv libopenblas-dev libjpeg-dev libpng-dev libtiff-dev
@@ -46,7 +58,19 @@ pip install --upgrade pip
 echo ""
 echo -e "${GREEN}[5/8] Instalando dependências Python...${NC}"
 echo "Isso pode demorar alguns minutos no Raspberry Pi..."
-pip install -r requirements.txt
+
+# Limpa cache do pip para economizar espaço
+pip cache purge 2>/dev/null || true
+
+# Instala numpy primeiro (versão compatível com piwheels)
+pip install --no-cache-dir numpy
+
+# Instala OpenCV do piwheels (pré-compilado para ARM)
+# Usa --prefer-binary para evitar compilação
+pip install --no-cache-dir --prefer-binary opencv-python-headless
+
+# Instala o resto das dependências
+pip install --no-cache-dir -r requirements.txt
 
 echo ""
 echo -e "${GREEN}[6/8] Criando diretórios necessários...${NC}"
